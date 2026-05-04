@@ -27,6 +27,7 @@ public final class PrivateMessageCommandHandler {
     @Inject private BukkitAudiences audiences;
     @Inject private PlayerDataRepository playerDataRepository;
     @Inject private ProxyService proxyService;
+    @Inject private PmSoundStorage pmSoundStorage;
 
     public void handleCommand(@NotNull CommandContext<@NotNull CommandSender> commandContext,
                               @NotNull CommandSender sender,
@@ -74,7 +75,7 @@ public final class PrivateMessageCommandHandler {
             if (target.isOnline()) {
                 var targetAudience = audiences.sender(target.asCommandSender());
                 targetAudience.sendMessage(toComponentFormat);
-                if (pmConfig.isPlaySound()) {
+                if (pmConfig.isPlaySound() && pmSoundStorage.isSoundEnabled(target.getName())) {
                     targetAudience.playSound(pmConfig.getSound());
                 }
             } else {

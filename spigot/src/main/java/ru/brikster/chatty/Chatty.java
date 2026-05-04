@@ -56,6 +56,7 @@ import ru.brikster.chatty.pm.ReplyCommandHandler;
 import ru.brikster.chatty.pm.ignore.AddIgnoreCommandHandler;
 import ru.brikster.chatty.pm.ignore.IgnoreListCommandHandler;
 import ru.brikster.chatty.pm.ignore.RemoveIgnoreCommandHandler;
+import ru.brikster.chatty.pm.PmSoundCommandHandler;
 import ru.brikster.chatty.proxy.ProxyService;
 import ru.brikster.chatty.repository.player.PlayerDataRepository;
 import ru.brikster.chatty.util.AdventureUtil;
@@ -209,6 +210,9 @@ public final class Chatty extends JavaPlugin {
         SpyCommandHandler spyCommandHandler = injector.getInstance(SpyCommandHandler.class);
         registerProxyingHandler("spy", spyCommandHandler);
 
+        PmSoundCommandHandler pmSoundCommandHandler = injector.getInstance(PmSoundCommandHandler.class);
+        registerProxyingHandler("pmsound", pmSoundCommandHandler);
+
         if (this.asyncCommandManager == null) {
             initAsyncCommandManager();
             if (pmConfig.isEnable()) {
@@ -289,6 +293,15 @@ public final class Chatty extends JavaPlugin {
                 .handler(proxyingCommandHandlerMap.get("spy"))
                 .build();
         asyncCommandManager.command(spyCommand);
+
+        var pmSoundCommand = asyncCommandManager
+                .commandBuilder("chatty")
+                .literal("pmsound")
+                .senderType(Player.class)
+                .permission("chatty.command.pmsound")
+                .handler(proxyingCommandHandlerMap.get("pmsound"))
+                .build();
+        asyncCommandManager.command(pmSoundCommand);
     }
 
     private void registerIgnoreCommand(CommandSuggestionsProvider<CommandSender> pmSuggestionsProvider) {
